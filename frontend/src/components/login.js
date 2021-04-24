@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import * as yup from 'yup';
 import {useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { userActions } from '../_actions';
+// import { userActions } from '../_actions';
 
 import schema from '../formValidation/LoginSchema'
 

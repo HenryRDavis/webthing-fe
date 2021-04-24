@@ -1,10 +1,10 @@
-import { combineReducers } from 'redux';
-import { authentication } from './authReducer.reducer';
-import { registration } from './reducers.reducer';
+// import { combineReducers } from 'redux';
+// import { authentication } from './authReducer';
+// import { registration } from './reducers';
 
-const rootReducer = combineReducers({
-    authentication,
-    registration,
-});
+// const rootReducer = combineReducers({
+//     authentication,
+//     registration,
+// });
 
-export default rootReducer;
+// export default rootReducer;
