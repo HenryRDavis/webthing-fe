@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React from 'react';
 import {Login} from './components/login';
 import Signup from './components/signup'
 import LandingPage from './components/homepage'
@@ -9,9 +8,9 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Router path='/login' component={Login}/>
-        <Router path='/signup' component={Signup}/>
-        <Router exact path='/' component={LandingPage}/>
+        <Route path='/login' component={Login}/>
+        <Route path='/signup' component={Signup}/>
+        <Route exact path='/' component={LandingPage}/>
       </Router>
     </div>
   );
