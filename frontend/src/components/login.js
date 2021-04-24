@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import * as yup from 'yup';
 import {useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-// import { userActions } from '../_actions';
+import { actions } from '../store/actions';
 import {Link} from 'react-router-dom'
 
 import schema from '../formValidation/LoginSchema'
@@ -70,11 +70,11 @@ function Login () {
         });
     }, [loginForm]);
 
-    // const sendSignUp = newLogin => {
-    //     console.log(newLogin)
+    const sendSignUp = newLogin => {
+        console.log(newLogin)
 
-    //     dispatch(userActions.login(newLogin))
-    // }
+        dispatch(actions.login(newLogin))
+    }
 
     return (
         <LoginDiv> 
@@ -85,7 +85,7 @@ function Login () {
                 </div>
                 <div className='input'>
                     <form onSubmit={onSubmit}>
-                        {formErrors.username.length > 0 ? <P className='error'>{formErrors.username} </P> : null}
+                        {formErrors.username.length > 0 ? <p className='error'>{formErrors.username} </p> : null}
                         <input
                         type='text'
                         name='username'
@@ -93,7 +93,7 @@ function Login () {
                         onChange={onChange}
                         placeholder='Enter Username'/>
 
-                        {formErrors.password.length > 0 ? <P className='error'>{formErrors.password} </P> : null}
+                        {formErrors.password.length > 0 ? <p className='error'>{formErrors.password} </p> : null}
                         <input
                         type='password'
                         name='password'

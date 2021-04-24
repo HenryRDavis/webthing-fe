@@ -1,4 +1,4 @@
-export function authHeader() {
+export function authHelper() {
     let token = JSON.parse(localStorage.getItem('token'));
 
     if (token) {
