@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import * as yup from "yup";
-import schema from '../formValidation/signUpSchema';
+import schema from '../formValidation/SignUpSchema';
 import styled from 'styled-components';
 import {useDispatch, useSelector } from 'react-redux';
 import { actions } from '../store/actions';
