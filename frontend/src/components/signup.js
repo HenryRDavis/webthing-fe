@@ -4,7 +4,6 @@ import schema from '../formValidation/SignUpSchema';
 import styled from 'styled-components';
 import {useDispatch, useSelector } from 'react-redux';
 import { actions } from '../store/actions';
-import { Link } from 'react-router-dom';
 
 // STYLING
 const FormContainerDiv = styled.div`
@@ -222,7 +221,6 @@ export default function Signup() {
         <LoginDiv>
         <FormContainerDiv>
         <div class="form-text-top">
-            <p id="welcome-text">Welcome</p>
             <p id="sub-text">Sign up Here!</p>
         </div>
 
