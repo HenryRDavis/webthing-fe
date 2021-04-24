@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default HomePage = () => {
+export default function HomePage  () {
     return (
         <BodyContainer>
             <div className="text-container">

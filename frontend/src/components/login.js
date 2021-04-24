@@ -3,6 +3,7 @@ import * as yup from 'yup';
 import {useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 // import { userActions } from '../_actions';
+import {Link} from 'react-router-dom'
 
 import schema from '../formValidation/LoginSchema'
 
@@ -23,7 +24,7 @@ function Login () {
 
     const [disabled, setDisabled] = useState(true)
 
-    const loggedIn = useSelector(state => stae.authentication.loggedIn);
+    const loggedIn = useSelector(state => state.authentication.loggedIn);
     const dispatch = useDispatch();
 
     const inputChange = (name, value) => {
@@ -59,7 +60,7 @@ function Login () {
 
     const onSubmit = e => {
         e.preventDefault()
-        formSubmit
+        formSubmit()
     }
 
     useEffect(() => {
@@ -69,11 +70,11 @@ function Login () {
         });
     }, [loginForm]);
 
-    const sendSignUp = newLogin => {
-        console.log(newLogin)
+    // const sendSignUp = newLogin => {
+    //     console.log(newLogin)
 
-        dispatch(userActions.login(newLogin))
-    }
+    //     dispatch(userActions.login(newLogin))
+    // }
 
     return (
         <LoginDiv> 
@@ -100,7 +101,7 @@ function Login () {
                         onChange={onChange}
                         placeholder='Enter Password'/>
 
-                        {loggingIn && <p>Logging In...</p>}
+                        {loggedIn && <p>Logging In...</p>}
                         {disabled === true ? <button className="btn-disabled" disabled={disabled}>Confirm</button> : <button className="btn" disabled={disabled}>Confirm</button>}
                     </form>
                     <span className='form-bottom'>No Account? <Link className='link' to='/signup'>Sign up here</Link></span>
