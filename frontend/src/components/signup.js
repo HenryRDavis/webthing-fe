@@ -223,7 +223,7 @@ export default function Signup() {
         <FormContainerDiv>
         <div class="form-text-top">
             <p id="welcome-text">Welcome</p>
-            <p id="sub-text">Anywhere Fitness</p>
+            <p id="sub-text">Sign up Here!</p>
         </div>
 
                 <form onSubmit={onSubmit}>
@@ -255,7 +255,7 @@ export default function Signup() {
                                    {registering && <p>Signing Up...</p>}
                     {disabled === true ? <button className="btn-disabled" disabled={disabled}>Confirm</button> : <button className="btn" disabled={disabled}>Confirm</button>}
                 </form>
-               <span>Want to be an instructor? <Link to='/signupInstructor'>Sign up here</Link></span>
+               
         </FormContainerDiv>
         </LoginDiv>
     )
