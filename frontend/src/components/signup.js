@@ -121,7 +121,7 @@ const FormContainerDiv = styled.div`
               0 32px 16px rgba(0,0,0,0.09);
 `
 
-const LoginDiv = styled.div`
+const SignUpDiv = styled.div`
     height:100%;
     min-height:500px;
     display:flex;
@@ -160,13 +160,15 @@ const initialErrors = {
 
 export default function Signup() {
 
-     const [clientForm, setclientForm] = useState(initialValues)
+     const [signUp, setSignUpForm] = useState(initialValues)
 
      const [formErrors, setFormErrors] = useState(initialErrors)
 
      const [disabled, setDisabled] = useState(true)
+
      const registering = useSelector(state => state.registration.registering);
      const dispatch = useDispatch();
+
      const inputChange = (name, value) => {
         yup.reach(schema,name)
         .validate(value)
@@ -177,12 +179,11 @@ export default function Signup() {
         })
         .catch((err) => {
             setFormErrors({
-              ...formErrors,
-              [name]: err.errors[0],
+              ...formErrors, [name]: err.errors[0],
             })
           }) 
-        setclientForm({
-            ...clientForm, [name]: value
+        setSignUpForm({
+            ...signUp, [name]: value
         })
      }
 
@@ -192,13 +193,12 @@ export default function Signup() {
      }
 
      const formSubmit = () => {
-         const newclient = {
-             name: clientForm.name.trim(),
-             username: clientForm.username.trim(),
-             password: clientForm.password.trim(),
-             role: 'client'
+         const newSignUp = {
+             name: signUp.name.trim(),
+             username: signUp.username.trim(),
+             password: signUp.password.trim(),
          }
-         sendSignUp(newclient)
+         sendSignUp(newSignUp)
      }
 
      const onSubmit = e => {
@@ -207,55 +207,49 @@ export default function Signup() {
      }
 
      useEffect(() => {
-        schema.isValid(clientForm).then((valid) => {
+        schema.isValid(signUp)
+        .then((valid) => {
           setDisabled(!valid);
         });
-      }, [clientForm]);
+      }, [signUp]);
 
 
-     const sendSignUp = newclient => {
-        dispatch(actions.register(newclient));
+     const sendSignUp = newSignUp => {
+        console.log(newSignUp)
+
+        dispatch(actions.register(newSignUp));
      }
 
     return (
-        <LoginDiv>
+        <SignUpDiv>
         <FormContainerDiv>
         <div class="form-text-top">
             <p id="sub-text">Sign up Here!</p>
         </div>
-
-                <form onSubmit={onSubmit}>
-                    {formErrors.name.length > 0 ? <p className="error">{formErrors.name}</p> : null}
-                    <input 
-                    type="text" 
-                    name="name" 
-                    value={clientForm.name}
-                    onChange={onChange}
-                    placeholder="Name"/>
+            <form onSubmit={onSubmit}>
+                {formErrors.username.length > 0 ? <p className="error">{formErrors.username}</p> : null}
+                <input 
+                type="text" 
+                name="username" 
+                value={signUp.username}
+                onChange={onChange}
+                placeholder="Username"/>
                     
-                    {formErrors.username.length > 0 ? <p className="error">{formErrors.username}</p> : null}
-                    <input 
-                    type="text" 
-                    name="username" 
-                    value={clientForm.username}
-                    onChange={onChange}
-                    placeholder="Username"/>
+                {formErrors.password.length > 0 ? <p className="error">{formErrors.password}</p> : null}
+                <input 
+                id="bottom-input"
+                type="password" 
+                name="password" 
+                value={signUp.password}
+                onChange={onChange}
+                placeholder="Password"/>
                     
-                    {formErrors.password.length > 0 ? <p className="error">{formErrors.password}</p> : null}
-                    <input 
-                    id="bottom-input"
-                    type="password" 
-                    name="password" 
-                    value={clientForm.password}
-                    onChange={onChange}
-                    placeholder="Password"/>
-                    
-                                   {registering && <p>Signing Up...</p>}
-                    {disabled === true ? <button className="btn-disabled" disabled={disabled}>Confirm</button> : <button className="btn" disabled={disabled}>Confirm</button>}
+               {registering && <p>Signing Up...</p>}
+                {disabled === true ? <button className="btn-disabled" disabled={disabled}>Confirm</button> : <button className="btn" disabled={disabled}>Confirm</button>}
                 </form>
                
         </FormContainerDiv>
-        </LoginDiv>
+        </SignUpDiv>
     )
 }
 
