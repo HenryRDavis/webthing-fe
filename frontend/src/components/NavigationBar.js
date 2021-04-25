@@ -1,11 +1,16 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import styled from 'styled-components'
+import {withStyles} from '@material-ui/core/styles'
 
+const NavBar = withStyles ({
+  root: {
+    backgroundColor: 'rgb(252,140,3, .8)'
+      }
+})(AppBar);
 
 export default function Navbar() {
     return (
-        <NavHeader>
+        <NavBar>
               <Link to='/' style={{ textDecoration: 'none' }}>
               <h1 className="company-name">A web page</h1>
               </Link>
@@ -15,6 +20,6 @@ export default function Navbar() {
                 <Link to='/signup' className='link signup-btn'> Sign up </Link>
               </nav>
               
-        </NavHeader>
+        </NavBar>
     )
 }
