@@ -194,7 +194,6 @@ export default function Signup() {
 
      const formSubmit = () => {
          const newSignUp = {
-             name: signUp.name.trim(),
              username: signUp.username.trim(),
              password: signUp.password.trim(),
          }

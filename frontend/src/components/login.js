@@ -131,7 +131,7 @@ const LoginDiv = styled.div`
     justify-content:center;
     align-items:center;
     .form-bottom {
-        font-size:2rem;
+        font-size:1rem;
         .link {
             text-decoration:none;
             color:black;
