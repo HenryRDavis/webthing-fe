@@ -25,10 +25,9 @@ export default function NavBar() {
     return (
         <NavThing>
               <NavLink to='/' style={{ textDecoration: 'none' }}>
-              <h1 className="company-name">A web page</h1>
+              <h1 className="company-name">Website</h1>
               </NavLink>
               <nav>
-                <NavLink to='/' className='link'> Home </NavLink>
                 <NavLink to='/login' className='link'> Login </NavLink>
                 <NavLink to='/signup' className='link signup-btn'> Sign up </NavLink>
               </nav>
