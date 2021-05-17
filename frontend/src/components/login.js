@@ -1,147 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import * as yup from 'yup';
-import {useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { actions } from '../store/actions';
-import {Link} from 'react-router-dom'
-import styled from 'styled-components';
-
+import {useDispatch } from 'react-redux';
+import axiosWithAuth from '../utils/axiosWithAuth'
 import schema from '../formValidation/LoginSchema'
 
-const FormContainerDiv = styled.div`
-  display: flex;
-  height:400px;
-  width:320px;
-  border-radius:2rem;
-  flex-direction:column;
-  justify-content:center;
-  font-family: 'Comfortaa', cursive;
-/*   height: 75vh; */
-  background-color: #ffffff;
-  padding: 1rem;
-  .form-text-top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  #welcome-text {
-    font-weight: 400;
-    font-size: 3rem; 
-  }
-  #sub-text {
-    font-family: 'MuseoModerno', cursive;
-    font-size: 2.5rem;
-  }
-  #sub-text {
-    font-family: 'MuseoModerno', cursive;
-  }
-  form {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-content: center   
-  }
-  .form-bottom {
-      display: flex;
-      justify-content: center;
-      #no-account {
-          font-size: .15rem;
-          margin-right: .35rem;
-      }
-      #sign-up {
-          font-size: .15rem;
-          font-weight: 750;
-      }
-  }
-  .error {
-      color: red;
-      font-size: 1.5rem;
-  }
-  
-  button {
-      color: white;
-      padding:1rem 0;
-      margin-bottom:1rem;
-  }
 
-  .btn {
-    flex: 1 1 auto;
-    background-image: linear-gradient(to right, #fbc2eb 0%, #a6c1ee 51%, #fbc2eb 100%);
-    margin: 10px;
-    border-radius: 5px;
-    padding: 3px;
-    text-align: center;
-    text-transform: uppercase;
-    transition: 0.5s;
-    background-size: 150% auto;
-    color: white;
-    /* text-shadow: 0px 0px 10px rgba(0,0,0,0.2);*/
-    box-shadow: 0 0 20px #eee;
-    .btn:hover {
-        background-position: right center;
-    }
-
-    .btn-disabled {
-    flex: 1 1 auto;
-    /* background-image: linear-gradient(to right, #fbc2eb 0%, #a6c1ee 51%, #fbc2eb 100%); */
-    background-color: grey;
-    margin: 10px;
-    border-radius: 5px;
-    padding: 3px;
-    text-align: center;
-    text-transform: uppercase;
-    transition: 0.5s;
-    background-size: 150% auto;
-    color: white;
-    /* text-shadow: 0px 0px 10px rgba(0,0,0,0.2);*/
-    box-shadow: 0 0 20px #eee;
-    }
-    .btn:hover {
-        background-position: right center;
-    }
-  }
-
-  input {
-      margin-bottom: .15rem;
-      margin-bottom: 2rem;
-      outline: 0;
-      border-width: 0 0 2px;
-      border-color: pink;
-  }
-  input:focus {
-      border-color: pink;
-  }
-  input[placeholder] {
-      font-size:2rem;
-  }
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 2px 1px rgba(0,0,0,0.09), 
-              0 4px 2px rgba(0,0,0,0.09), 
-              0 8px 4px rgba(0,0,0,0.09), 
-              0 16px 8px rgba(0,0,0,0.09),
-              0 32px 16px rgba(0,0,0,0.09);
-`
-
-const LoginDiv = styled.div`
-    height:100%;
-    min-height:500px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    .form-bottom {
-        font-size:1rem;
-        .link {
-            text-decoration:none;
-            color:black;
-            font-weight:bold;
-            &:hover {
-                color:pink;
-            }
-        }
-    }
-`
 
 const initialValues = {
     username: '',
@@ -152,102 +15,118 @@ const initialErrors = {
     username: '',
     password: ''
 }
-
-function Login () {
-    const [loginForm, setLoginForm] = useState(initialValues)
-
-    const  [formErrors, setForErrors] = useState(initialErrors)
-
-    const [disabled, setDisabled] = useState(true)
-
-    const loggedIn = useSelector(state => state.authentication.loggedIn);
+const LoginForm = (props) => {
     const dispatch = useDispatch();
+    const initialDisabled = true;
 
-    const inputChange = (name, value) => {
-        yup.reach(schema, name)
-        .validate(value)
-        .then(() => {
-            setForErrors({
-                ...formErrors, [name]: ''
-            })
-        })
-        .catch((err) => {
-            setForErrors({
-                ...formErrors, [name]: err.errors[0],
-            })
-        })
-        setLoginForm({
-            ...loggedIn, [name]: value
-        })
-    }
+    const [login, setLogin] = useState([]);
+    const [LoginForm, setLoginForm] = useState(initialValues);
+    const  [formErrors, setFormErrors] = useState(initialErrors);
+    const [disabled, setDisabled] = useState(initialDisabled);
 
-    const onChange = e => {
-        const {name, value} = e.target
-        inputChange(name, value)
-    }
-
-    const formSubmit = () => {
+    const postNewLogin = (newLogin) => {
+        axiosWithAuth()
+          .post("/users/login", newLogin)
+          .then((res) => {
+            setLogin([...login, newLogin]);
+            setLoginForm(initialFormValues);
+            dispatch({
+              type: LOG_ON_SUCCESS,
+              payload: {
+                username: res.data.data.username,
+                password: res.data.data.password,
+              },
+            });
+            window.localStorage.setItem("token", res.data.token);
+            window.location = '/home'
+            window.localStorage.setItem("username", res.data.data.username);
+            window.localStorage.setItem("uid", res.data.data.id);
+          })
+          .catch((err) => {
+            alert(
+              "There was an error logging you in, please reload the page and try again."
+            );
+            console.log(err);
+          });
+      };
+    
+      const formSubmit = (e) => {
+        e.preventDefault();
         const newLogin = {
-            username: loginForm.username.trim(),
-            password: loginForm.password.trim()
-        }
-        sendSignUp(newLogin)
-    }
-
-    const onSubmit = e => {
-        e.preventDefault()
-        
-        formSubmit()
-    }
-
-    useEffect(() => {
-        schema.isValid(loginForm)
-        .then((valid) => {
-            setDisabled(!valid);
+          username: LoginForm.username.trim(),
+          password: LoginForm.password.trim(),
+        };
+        postNewLogin(newLogin);
+      };
+    
+      const validate = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+    
+        yup
+          .reach(schema, name)
+          .validate(value)
+          .then((valid) => {
+            setFormErrors({
+              ...formErrors,
+              [name]: "",
+            });
+          })
+          .catch((err) => {
+            setFormErrors({
+              ...formErrors,
+              [name]: err.errors[0],
+            });
+          });
+        setLoginForm({
+          ...LoginForm,
+          [name]: value,
         });
-    }, [loginForm]);
-
-    const sendSignUp = newLogin => {
-        console.log(newLogin)
-
-        dispatch(actions.login(newLogin))
-    }
+      };
+    
+      useEffect(() => {
+        schema.isValid(LoginForm).then((valid) => {
+          setDisabled(!valid);
+        });
+      }, [LoginForm]);
 
     return (
-        <LoginDiv> 
-            <FormContainerDiv>
-                <div className='text-top'>
-                    <p class='grettings'>Hello! Nice to See you again!</p>
-                    <p class='grettings'>Login to get back to what you were doing!</p>
-                </div>
-                <div className='input'>
-                    <form onSubmit={onSubmit}>
-                        {formErrors.username.length > 0 ? <p className='error'>{formErrors.username} </p> : null}
-                        <input
-                        type='text'
-                        name='username'
-                        value={loginForm.username}
-                        onChange={onChange}
-                        placeholder='Enter Username'/>
+        <div>
+          <form className={classes.form} onSubmit={formSubmit}>
+            <label className={classes.labelUsername}>
+              {" "}
+              Username <br />
+              <input
+                type="text"
+                name="username"
+                value={LoginForm.username}
+                placeholder="Username"
+                onChange={validate}
+                className={classes.input}
+              />
+              <div>{formErrors.username}</div>
+            </label>{" "}
+            <br />
 
-                        {formErrors.password.length > 0 ? <p className='error'>{formErrors.password} </p> : null}
-                        <input
-                        type='password'
-                        name='password'
-                        value={loginForm.password}
-                        onChange={onChange}
-                        placeholder='Enter Password'/>
-
-                        {loggedIn && <p>Logging In...</p>}
-                        {disabled === true ? <button className="btn-disabled" disabled={disabled}>Confirm</button> : <button className="btn" disabled={disabled}>Confirm</button>}
-                    </form>
-                    <span className='form-bottom'>No Account? <Link className='link' to='/signup'>Sign up here</Link></span>
-                </div>
-                {localStorage.getItem('token') && <Redirect to="/homepage" />}
-            </FormContainerDiv>
-        </LoginDiv>
+            <label className = {classes.labelPassword}>
+              Password <br />
+             <input
+                type="password"
+                name="password"
+                value={LoginForm.password}
+                placeholder="Password"
+                onChange={validate}
+                className={classes.input}
+            />
+            </label>
+            <div>{formErrors.password}</div>
+            <LogInButton type='submit' disabled={disabled} name="loginButton">
+              Login
+            </LogInButton>
+          </form>
+        </div>
     )
 
 }
 
-export { Login };
+export default LoginForm;
